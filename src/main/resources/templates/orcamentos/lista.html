@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+    <section>
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold">Orcamentos</h1>
+            <a class="px-4 py-2 rounded bg-slate-900 text-white" th:href="@{/orcamentos/novo}">Novo orcamento</a>
+        </div>
+
+        <form class="flex flex-col md:flex-row md:items-end gap-4 mb-6" method="get" th:action="@{/orcamentos}">
+            <div>
+                <label class="block text-sm font-medium">Status</label>
+                <select class="border rounded px-3 py-2" name="status">
+                <option value="" th:selected="${statusSelecionado == null}">Todos os status</option>
+                <option th:each="status : ${statusPossiveis}" th:value="${status}" th:text="${status}" th:selected="${statusSelecionado == status}"></option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Data inicio</label>
+                <input class="border rounded px-3 py-2" type="date" name="dataInicio" th:value="${dataInicio}" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Data fim</label>
+                <input class="border rounded px-3 py-2" type="date" name="dataFim" th:value="${dataFim}" />
+            </div>
+            <button class="px-4 py-2 rounded bg-slate-700 text-white h-10" type="submit">Filtrar</button>
+        </form>
+
+        <div class="bg-white shadow rounded">
+            <table class="min-w-full">
+                <thead>
+                <tr class="text-left border-b">
+                    <th class="p-3">Numero</th>
+                    <th class="p-3">Cliente</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Total final</th>
+                    <th class="p-3">Acoes</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="orcamento : ${orcamentos}" class="border-b">
+                    <td class="p-3" th:text="${orcamento.id}"></td>
+                    <td class="p-3" th:text="${orcamento.clienteNome}"></td>
+                    <td class="p-3" th:text="${orcamento.status}"></td>
+                    <td class="p-3" th:text="${orcamento.totalFinal}"></td>
+                    <td class="p-3">
+                        <a class="text-slate-900" th:href="@{/orcamentos/{id}(id=${orcamento.id})}">Detalhes</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+    <section>
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold">Movimentacoes de estoque</h1>
+        </div>
+
+        <div class="bg-white shadow rounded p-4 mb-6">
+            <h2 class="text-lg font-semibold mb-3">Registrar movimentacao</h2>
+            <form class="grid grid-cols-1 md:grid-cols-4 gap-4" method="post" th:action="@{/estoque/movimentacoes}">
+                <select class="border rounded px-3 py-2" name="produtoId" required>
+                    <option value="">Selecione o produto</option>
+                    <option th:each="produto : ${produtos}" th:value="${produto.id}" th:text="${produto.nome}"></option>
+                </select>
+                <select class="border rounded px-3 py-2" name="tipo" required>
+                    <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}"></option>
+                </select>
+                <input class="border rounded px-3 py-2" type="number" name="quantidade" min="1" value="1" required />
+                <input class="border rounded px-3 py-2" type="text" name="motivo" placeholder="Motivo" required />
+                <button class="px-4 py-2 rounded bg-slate-900 text-white md:col-span-4" type="submit">Salvar</button>
+            </form>
+        </div>
+
+        <div class="bg-white shadow rounded">
+            <table class="min-w-full">
+                <thead>
+                <tr class="text-left border-b">
+                    <th class="p-3">Data</th>
+                    <th class="p-3">Produto</th>
+                    <th class="p-3">Tipo</th>
+                    <th class="p-3">Quantidade</th>
+                    <th class="p-3">Motivo</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="mov : ${movimentacoes}" class="border-b">
+                    <td class="p-3" th:text="${mov.dataMovimentacao}"></td>
+                    <td class="p-3" th:text="${mov.produto.nome}"></td>
+                    <td class="p-3" th:text="${mov.tipo}"></td>
+                    <td class="p-3" th:text="${mov.quantidade}"></td>
+                    <td class="p-3" th:text="${mov.motivo}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</html>

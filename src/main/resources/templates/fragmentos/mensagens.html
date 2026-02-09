@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="mensagens">
+    <div th:if="${mensagemSucesso}" class="mb-4 rounded bg-emerald-100 text-emerald-800 px-4 py-3">
+        <span th:text="${mensagemSucesso}"></span>
+    </div>
+    <div th:if="${mensagemErro}" class="mb-4 rounded bg-rose-100 text-rose-800 px-4 py-3">
+        <span th:text="${mensagemErro}"></span>
+    </div>
+</div>
+</body>
+</html>

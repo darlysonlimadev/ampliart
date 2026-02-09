@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(conteudo)">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ampliart</title>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}" />
+</head>
+<body class="bg-gradient-to-br from-rose-50 via-amber-50 to-sky-50 text-slate-900">
+    <div class="min-h-screen flex">
+        <aside class="w-64 bg-white/80 backdrop-blur border-r border-rose-100 p-6">
+            <div class="text-2xl font-semibold text-rose-700 mb-8">Ampliart</div>
+            <nav class="space-y-3 text-slate-700">
+                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/dashboard}">Dashboard</a>
+                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/produtos}">Produtos</a>
+                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/categorias}">Categorias</a>
+                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/estoque/movimentacoes}">Estoque</a>
+                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/orcamentos}">Orcamentos</a>
+            </nav>
+        </aside>
+        <main class="flex-1 p-8">
+            <div th:replace="~{fragmentos/mensagens :: mensagens}"></div>
+            <div th:replace="${conteudo}"></div>
+        </main>
+    </div>
+    <script>
+        function aplicarMascaraTelefone(valor) {
+            const numeros = valor.replace(/\\D/g, '');
+            if (numeros.length <= 10) {
+                return numeros.replace(/(\\d{2})(\\d{4})(\\d{0,4})/, '($1) $2-$3').trim();
+            }
+            return numeros.replace(/(\\d{2})(\\d{5})(\\d{0,4})/, '($1) $2-$3').trim();
+        }
+
+        function aplicarMascaraMoeda(valor) {
+            const numero = Number(valor.replace(',', '.'));
+            if (Number.isNaN(numero)) {
+                return valor;
+            }
+            return numero.toFixed(2);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.js-telefone').forEach((el) => {
+                el.addEventListener('input', (e) => {
+                    e.target.value = aplicarMascaraTelefone(e.target.value);
+                });
+            });
+            document.querySelectorAll('.js-moeda').forEach((el) => {
+                el.addEventListener('blur', (e) => {
+                    e.target.value = aplicarMascaraMoeda(e.target.value);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

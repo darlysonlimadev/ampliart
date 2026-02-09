@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+    <section>
+        <h1 class="text-2xl font-semibold mb-6">Dashboard</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white shadow rounded p-4">
+                <div class="text-sm text-slate-500">Hoje</div>
+                <div class="text-lg font-semibold" th:text="${indicadorHoje.receita}"></div>
+                <div class="text-sm">Gasto: <span th:text="${indicadorHoje.gasto}"></span></div>
+                <div class="text-sm">Lucro: <span th:text="${indicadorHoje.lucro}"></span></div>
+            </div>
+            <div class="bg-white shadow rounded p-4">
+                <div class="text-sm text-slate-500">Semana</div>
+                <div class="text-lg font-semibold" th:text="${indicadorSemana.receita}"></div>
+                <div class="text-sm">Gasto: <span th:text="${indicadorSemana.gasto}"></span></div>
+                <div class="text-sm">Lucro: <span th:text="${indicadorSemana.lucro}"></span></div>
+            </div>
+            <div class="bg-white shadow rounded p-4">
+                <div class="text-sm text-slate-500">Mes</div>
+                <div class="text-lg font-semibold" th:text="${indicadorMes.receita}"></div>
+                <div class="text-sm">Gasto: <span th:text="${indicadorMes.gasto}"></span></div>
+                <div class="text-sm">Lucro: <span th:text="${indicadorMes.lucro}"></span></div>
+            </div>
+            <div class="bg-white shadow rounded p-4">
+                <div class="text-sm text-slate-500">Ano</div>
+                <div class="text-lg font-semibold" th:text="${indicadorAno.receita}"></div>
+                <div class="text-sm">Gasto: <span th:text="${indicadorAno.gasto}"></span></div>
+                <div class="text-sm">Lucro: <span th:text="${indicadorAno.lucro}"></span></div>
+            </div>
+        </div>
+
+        <div class="bg-white shadow rounded mb-6">
+            <div class="p-4 border-b font-semibold">Ultimos 7 dias</div>
+            <div class="p-4">
+                <canvas id="graficoReceita" height="120"></canvas>
+            </div>
+            <table class="min-w-full">
+                <thead>
+                <tr class="text-left border-b">
+                    <th class="p-3">Periodo</th>
+                    <th class="p-3">Receita</th>
+                    <th class="p-3">Gasto</th>
+                    <th class="p-3">Lucro</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="linha : ${ultimosDias}" class="border-b">
+                    <td class="p-3" th:text="${linha.periodo}"></td>
+                    <td class="p-3" th:text="${linha.receita}"></td>
+                    <td class="p-3" th:text="${linha.gasto}"></td>
+                    <td class="p-3" th:text="${linha.lucro}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script th:inline="javascript">
+            const labels = [[${labelsGrafico}]];
+            const receitas = [[${receitasGrafico}]];
+            const lucros = [[${lucrosGrafico}]];
+            const ctx = document.getElementById('graficoReceita');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Receita',
+                                data: receitas,
+                                borderColor: '#0f172a',
+                                backgroundColor: 'rgba(15, 23, 42, 0.1)',
+                                tension: 0.3
+                            },
+                            {
+                                label: 'Lucro',
+                                data: lucros,
+                                borderColor: '#16a34a',
+                                backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        </script>
+    </section>
+</html>

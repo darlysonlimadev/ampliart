@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+    <section>
+        <h1 class="text-2xl font-semibold mb-6">Detalhes do produto</h1>
+        <div class="bg-white shadow rounded p-6 space-y-2">
+            <div><strong>Nome:</strong> <span th:text="${produto.nome}"></span></div>
+            <div><strong>Codigo:</strong> <span th:text="${produto.codigo}"></span></div>
+            <div><strong>Descricao:</strong> <span th:text="${produto.descricao}"></span></div>
+            <div><strong>Categoria:</strong> <span th:text="${produto.categoria != null ? produto.categoria.nome : '-'}"></span></div>
+            <div><strong>Preco compra:</strong> <span th:text="${produto.precoCompra}"></span></div>
+            <div><strong>Preco venda:</strong> <span th:text="${produto.precoVenda}"></span></div>
+            <div><strong>Estoque:</strong> <span th:text="${produto.quantidadeEstoque}"></span></div>
+            <div><strong>Ativo:</strong> <span th:text="${produto.ativo}"></span></div>
+        </div>
+        <div class="mt-4">
+            <a class="text-slate-900" th:href="@{/produtos/{id}/editar(id=${produto.id})}">Editar</a>
+            <a class="ml-3 text-slate-700" th:href="@{/produtos}">Voltar</a>
+        </div>
+    </section>
+</html>

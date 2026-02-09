@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+    <section>
+        <div class="flex items-center justify-between mb-6">
+            <h1 class="text-2xl font-semibold">Categorias</h1>
+        </div>
+
+        <div class="bg-white/80 shadow rounded p-4 mb-6 border border-slate-100">
+            <h2 class="text-lg font-semibold mb-3">Nova categoria</h2>
+            <form class="flex flex-col md:flex-row gap-3 items-start" method="post" th:action="@{/categorias}" th:object="${categoria}">
+                <div class="flex-1">
+                    <input class="border rounded px-3 py-2 w-full" type="text" th:field="*{nome}" placeholder="Nome da categoria" />
+                    <p class="text-rose-600 text-sm mt-1" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+                </div>
+                <button class="px-4 py-2 rounded bg-slate-900 text-white" type="submit">Salvar</button>
+            </form>
+        </div>
+
+        <div class="bg-white/80 shadow rounded border border-slate-100">
+            <table class="min-w-full">
+                <thead>
+                <tr class="text-left border-b">
+                    <th class="p-3">Nome</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="categoria : ${categorias}" class="border-b">
+                    <td class="p-3" th:text="${categoria.nome}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</html>

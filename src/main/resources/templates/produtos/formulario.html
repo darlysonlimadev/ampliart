@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+    <section>
+        <h1 class="text-2xl font-semibold mb-6" th:text="${produto.id == null} ? 'Novo produto' : 'Editar produto'"></h1>
+        <form class="grid grid-cols-1 md:grid-cols-2 gap-4" th:action="${produto.id == null} ? @{/produtos/novo} : @{/produtos/{id}/editar(id=${produto.id})}" method="post" th:object="${produto}">
+            <div>
+                <label class="block text-sm font-medium">Nome</label>
+                <input class="border rounded px-3 py-2 w-full" type="text" th:field="*{nome}" />
+                <p class="text-rose-600 text-sm" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Codigo</label>
+                <input class="border rounded px-3 py-2 w-full" type="text" th:field="*{codigo}" />
+                <p class="text-rose-600 text-sm" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Categoria</label>
+                <select class="border rounded px-3 py-2 w-full" th:field="*{categoria.id}" required>
+                    <option value="" disabled th:selected="${produto.categoria == null}">Selecione</option>
+                    <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
+                </select>
+                <p class="text-rose-600 text-sm" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></p>
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium">Descricao</label>
+                <textarea class="border rounded px-3 py-2 w-full" rows="3" th:field="*{descricao}"></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Preco compra</label>
+                <input class="border rounded px-3 py-2 w-full js-moeda" type="number" step="0.01" th:field="*{precoCompra}" />
+                <p class="text-rose-600 text-sm" th:if="${#fields.hasErrors('precoCompra')}" th:errors="*{precoCompra}"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Preco venda</label>
+                <input class="border rounded px-3 py-2 w-full js-moeda" type="number" step="0.01" th:field="*{precoVenda}" />
+                <p class="text-rose-600 text-sm" th:if="${#fields.hasErrors('precoVenda')}" th:errors="*{precoVenda}"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Quantidade em estoque</label>
+                <input class="border rounded px-3 py-2 w-full" type="number" th:field="*{quantidadeEstoque}" />
+                <p class="text-rose-600 text-sm" th:if="${#fields.hasErrors('quantidadeEstoque')}" th:errors="*{quantidadeEstoque}"></p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium">Ativo</label>
+                <select class="border rounded px-3 py-2 w-full" th:field="*{ativo}">
+                    <option th:value="true">Sim</option>
+                    <option th:value="false">Nao</option>
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <button class="px-4 py-2 rounded bg-slate-900 text-white" type="submit">Salvar</button>
+                <a class="ml-3 text-slate-700" th:href="@{/produtos}">Voltar</a>
+            </div>
+        </form>
+    </section>
+</html>
