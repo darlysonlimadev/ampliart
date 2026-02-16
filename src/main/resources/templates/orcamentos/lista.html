@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
-    <section>
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-semibold">Orcamentos</h1>
-            <a class="px-4 py-2 rounded bg-slate-900 text-white" th:href="@{/orcamentos/novo}">Novo orcamento</a>
-        </div>
+<section class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100 md:text-5xl">Orcamentos</h1>
+        <a class="inline-flex h-12 items-center rounded-xl bg-indigo-600 px-5 text-base font-semibold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-500 dark:shadow-black/30" th:href="@{/orcamentos/novo}">Novo Orcamento</a>
+    </div>
 
-        <form class="flex flex-col md:flex-row md:items-end gap-4 mb-6" method="get" th:action="@{/orcamentos}">
-            <div>
-                <label class="block text-sm font-medium">Status</label>
-                <select class="border rounded px-3 py-2" name="status">
-                <option value="" th:selected="${statusSelecionado == null}">Todos os status</option>
-                <option th:each="status : ${statusPossiveis}" th:value="${status}" th:text="${status}" th:selected="${statusSelecionado == status}"></option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium">Data inicio</label>
-                <input class="border rounded px-3 py-2" type="date" name="dataInicio" th:value="${dataInicio}" />
-            </div>
-            <div>
-                <label class="block text-sm font-medium">Data fim</label>
-                <input class="border rounded px-3 py-2" type="date" name="dataFim" th:value="${dataFim}" />
-            </div>
-            <button class="px-4 py-2 rounded bg-slate-700 text-white h-10" type="submit">Filtrar</button>
-        </form>
+    <form class="grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-[1fr_auto_auto_auto] dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20" method="get" th:action="@{/orcamentos}">
+        <select class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" name="status">
+            <option value="" th:selected="${statusSelecionado == null}">Todos os status</option>
+            <option th:each="status : ${statusPossiveis}" th:value="${status.name()}" th:text="${status.label}" th:selected="${statusSelecionado == status}"></option>
+        </select>
+        <input class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" type="date" name="dataInicio" th:value="${dataInicio}" />
+        <input class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" type="date" name="dataFim" th:value="${dataFim}" />
+        <button class="h-11 rounded-xl bg-slate-800 px-4 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-indigo-600 dark:hover:bg-indigo-500" type="submit">Filtrar</button>
+    </form>
 
-        <div class="bg-white shadow rounded">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+        <div class="max-h-[66vh] overflow-auto">
             <table class="min-w-full">
-                <thead>
-                <tr class="text-left border-b">
-                    <th class="p-3">Numero</th>
-                    <th class="p-3">Cliente</th>
-                    <th class="p-3">Status</th>
-                    <th class="p-3">Total final</th>
-                    <th class="p-3">Acoes</th>
+                <thead class="sticky top-0 bg-slate-50 dark:bg-slate-800">
+                <tr class="text-left text-sm font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    <th class="px-4 py-4">Numero</th>
+                    <th class="px-4 py-4">Cliente</th>
+                    <th class="px-4 py-4">Status</th>
+                    <th class="px-4 py-4">Total Final</th>
+                    <th class="px-4 py-4">Acoes</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="orcamento : ${orcamentos}" class="border-b">
-                    <td class="p-3" th:text="${orcamento.id}"></td>
-                    <td class="p-3" th:text="${orcamento.clienteNome}"></td>
-                    <td class="p-3" th:text="${orcamento.status}"></td>
-                    <td class="p-3" th:text="${orcamento.totalFinal}"></td>
-                    <td class="p-3">
-                        <a class="text-slate-900" th:href="@{/orcamentos/{id}(id=${orcamento.id})}">Detalhes</a>
+                <tr th:each="orcamento : ${orcamentos}" class="border-t border-slate-100 text-base text-slate-700 dark:border-slate-700 dark:text-slate-300">
+                    <td class="px-4 py-4 font-semibold text-slate-800 dark:text-slate-100" th:text="${orcamento.id}"></td>
+                    <td class="px-4 py-4" th:text="${orcamento.clienteNome}"></td>
+                    <td class="px-4 py-4">
+                        <span class="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600 dark:bg-slate-700 dark:text-slate-200" th:text="${orcamento.status.label}"></span>
                     </td>
+                    <td class="px-4 py-4 font-bold text-slate-800 dark:text-slate-100" th:text="'R$ ' + ${#numbers.formatDecimal(orcamento.totalFinal, 1, 2)}"></td>
+                    <td class="px-4 py-4">
+                        <a class="inline-flex rounded-lg bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700" th:href="@{/orcamentos/{id}(id=${orcamento.id})}">Abrir</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(orcamentos)}">
+                    <td colspan="5" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">Nenhum orcamento encontrado.</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-    </section>
+    </div>
+</section>
 </html>

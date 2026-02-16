@@ -121,11 +121,36 @@ public class OrcamentoServico {
     @Transactional
     public Orcamento aplicarAjuste(Long orcamentoId, TipoAjuste tipoAjuste, BigDecimal percentual) {
         Orcamento orcamento = buscarPorId(orcamentoId);
-        if (percentual != null) {
-            percentual = percentual.setScale(2, RoundingMode.HALF_UP);
+        if (percentual == null) {
+            throw new IllegalArgumentException("Informe o percentual do ajuste");
         }
+        if (percentual.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Percentual do ajuste nao pode ser negativo");
+        }
+        if (percentual.compareTo(new BigDecimal("100")) > 0) {
+            throw new IllegalArgumentException("Percentual do ajuste deve ser no maximo 100%");
+        }
+        if (percentual.compareTo(BigDecimal.ZERO) == 0) {
+            orcamento.setTipoAjuste(null);
+            orcamento.setPercentualAjuste(null);
+            recalcularTotais(orcamento);
+            return orcamentoRepositorio.save(orcamento);
+        }
+        if (tipoAjuste == null) {
+            throw new IllegalArgumentException("Selecione se o ajuste e desconto ou acrescimo");
+        }
+        percentual = percentual.setScale(2, RoundingMode.HALF_UP);
         orcamento.setTipoAjuste(tipoAjuste);
         orcamento.setPercentualAjuste(percentual);
+        recalcularTotais(orcamento);
+        return orcamentoRepositorio.save(orcamento);
+    }
+
+    @Transactional
+    public Orcamento removerAjuste(Long orcamentoId) {
+        Orcamento orcamento = buscarPorId(orcamentoId);
+        orcamento.setTipoAjuste(null);
+        orcamento.setPercentualAjuste(null);
         recalcularTotais(orcamento);
         return orcamentoRepositorio.save(orcamento);
     }

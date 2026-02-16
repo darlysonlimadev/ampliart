@@ -2,10 +2,10 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <body>
 <div th:fragment="mensagens">
-    <div th:if="${mensagemSucesso}" class="mb-4 rounded bg-emerald-100 text-emerald-800 px-4 py-3">
+    <div th:if="${mensagemSucesso}" class="mb-4 rounded border border-emerald-200 bg-emerald-100 px-4 py-3 text-emerald-800 dark:border-emerald-700/60 dark:bg-emerald-900/30 dark:text-emerald-200">
         <span th:text="${mensagemSucesso}"></span>
     </div>
-    <div th:if="${mensagemErro}" class="mb-4 rounded bg-rose-100 text-rose-800 px-4 py-3">
+    <div th:if="${mensagemErro}" class="mb-4 rounded border border-rose-200 bg-rose-100 px-4 py-3 text-rose-800 dark:border-rose-700/60 dark:bg-rose-900/30 dark:text-rose-200">
         <span th:text="${mensagemErro}"></span>
     </div>
 </div>

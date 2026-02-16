@@ -1,31 +1,38 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
-    <section>
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-semibold">Categorias</h1>
+    <section class="space-y-6">
+        <div class="flex items-center justify-between">
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100 md:text-5xl">Categorias</h1>
         </div>
 
-        <div class="bg-white/80 shadow rounded p-4 mb-6 border border-slate-100">
-            <h2 class="text-lg font-semibold mb-3">Nova categoria</h2>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/80 dark:shadow-black/30">
+            <h2 class="mb-3 text-lg font-semibold text-slate-800 dark:text-slate-100">Nova categoria</h2>
             <form class="flex flex-col md:flex-row gap-3 items-start" method="post" th:action="@{/categorias}" th:object="${categoria}">
                 <div class="flex-1">
-                    <input class="border rounded px-3 py-2 w-full" type="text" th:field="*{nome}" placeholder="Nome da categoria" />
-                    <p class="text-rose-600 text-sm mt-1" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
+                    <input class="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-base text-slate-700 outline-none transition focus:border-indigo-400 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:focus:border-indigo-400"
+                           type="text"
+                           th:field="*{nome}"
+                           placeholder="Nome da categoria" />
+                    <p class="mt-1 text-sm text-rose-600 dark:text-rose-300" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></p>
                 </div>
-                <button class="px-4 py-2 rounded bg-slate-900 text-white" type="submit">Salvar</button>
+                <button class="h-11 rounded-xl bg-slate-800 px-4 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-indigo-500 dark:hover:bg-indigo-400"
+                        type="submit">Salvar</button>
             </form>
         </div>
 
-        <div class="bg-white/80 shadow rounded border border-slate-100">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/80 dark:shadow-black/30">
             <table class="min-w-full">
-                <thead>
-                <tr class="text-left border-b">
-                    <th class="p-3">Nome</th>
+                <thead class="bg-slate-50 dark:bg-slate-800/60">
+                <tr class="text-left text-sm font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    <th class="px-4 py-4">Nome</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="categoria : ${categorias}" class="border-b">
-                    <td class="p-3" th:text="${categoria.nome}"></td>
+                <tr th:each="categoria : ${categorias}" class="border-t border-slate-100 text-base text-slate-700 dark:border-slate-700 dark:text-slate-200">
+                    <td class="px-4 py-4 font-medium" th:text="${categoria.nome}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(categorias)}">
+                    <td class="px-4 py-8 text-center text-base text-slate-500 dark:text-slate-400">Nenhuma categoria cadastrada.</td>
                 </tr>
                 </tbody>
             </table>

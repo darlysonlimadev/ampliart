@@ -1,50 +1,84 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
-    <section>
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-semibold">Produtos</h1>
-            <a class="px-4 py-2 rounded bg-slate-900 text-white" th:href="@{/produtos/novo}">Novo produto</a>
-        </div>
+<section class="space-y-6">
+    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-800 md:text-5xl">Estoque de Produtos</h1>
+        <a class="inline-flex h-12 items-center gap-2 rounded-xl bg-indigo-600 px-5 text-base font-semibold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-500 md:text-xl" th:href="@{/produtos/novo}">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+            </svg>
+            Adicionar Produto
+        </a>
+    </div>
 
-        <form class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6" method="get" th:action="@{/produtos}">
-            <input class="border rounded px-3 py-2" type="text" name="nome" placeholder="Buscar por nome" th:value="${nome}" />
-            <input class="border rounded px-3 py-2" type="text" name="codigo" placeholder="Codigo exato" th:value="${codigo}" />
-            <select class="border rounded px-3 py-2" name="ativo">
-                <option value="" th:selected="${ativo == null}">Todos</option>
-                <option value="true" th:selected="${ativo == true}">Ativos</option>
-                <option value="false" th:selected="${ativo == false}">Inativos</option>
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <h2 class="mb-3 text-lg font-semibold text-slate-800">Buscar Produto</h2>
+        <form class="grid grid-cols-1 gap-3 md:grid-cols-[2fr_1fr_auto_auto]" method="get" th:action="@{/produtos}">
+            <input class="h-11 rounded-xl border border-slate-200 px-4 text-lg text-slate-700 outline-none transition focus:border-indigo-400"
+                   type="text"
+                   name="nomeProduto"
+                   placeholder="Buscar por nome ou bipar codigo..."
+                   th:value="${nomeProduto}"
+                   autocomplete="off"
+                   autofocus />
+            <select class="h-11 rounded-xl border border-slate-200 px-3 text-base text-slate-600 outline-none transition focus:border-indigo-400" name="categoriaId">
+                <option value="" th:selected="${categoriaId == null}">Todas categorias</option>
+                <option th:each="categoria : ${categorias}" th:value="${categoria.id}" th:text="${categoria.nome}" th:selected="${categoriaId == categoria.id}"></option>
             </select>
-            <button class="px-4 py-2 rounded bg-slate-700 text-white" type="submit">Filtrar</button>
+            <button class="h-11 rounded-xl bg-slate-800 px-4 text-sm font-semibold text-white transition hover:bg-slate-700" type="submit">Buscar</button>
+            <a class="inline-flex h-11 items-center justify-center rounded-xl bg-slate-100 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-200"
+               th:href="@{/produtos}">Limpar</a>
         </form>
+    </div>
 
-        <div class="bg-white shadow rounded">
+    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div class="max-h-[67vh] overflow-auto">
             <table class="min-w-full">
-                <thead>
-                <tr class="text-left border-b">
-                    <th class="p-3">Nome</th>
-                    <th class="p-3">Codigo</th>
-                    <th class="p-3">Categoria</th>
-                    <th class="p-3">Preco venda</th>
-                    <th class="p-3">Estoque</th>
-                    <th class="p-3">Ativo</th>
-                    <th class="p-3">Acoes</th>
+                <thead class="sticky top-0 bg-slate-50">
+                <tr class="text-left text-sm font-bold uppercase tracking-wide text-slate-500">
+                    <th class="px-4 py-4">Produto</th>
+                    <th class="px-4 py-4">Categoria</th>
+                    <th class="px-4 py-4">Custo</th>
+                    <th class="px-4 py-4">Venda</th>
+                    <th class="px-4 py-4">Margem</th>
+                    <th class="px-4 py-4">Estoque</th>
+                    <th class="px-4 py-4">Acoes</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="produto : ${produtos}" class="border-b">
-                    <td class="p-3" th:text="${produto.nome}"></td>
-                    <td class="p-3" th:text="${produto.codigo}"></td>
-                    <td class="p-3" th:text="${produto.categoria != null ? produto.categoria.nome : '-'}"></td>
-                    <td class="p-3" th:text="${produto.precoVenda}"></td>
-                    <td class="p-3" th:text="${produto.quantidadeEstoque}"></td>
-                    <td class="p-3" th:text="${produto.ativo}"></td>
-                    <td class="p-3 space-x-2">
-                        <a class="text-slate-700" th:href="@{/produtos/{id}(id=${produto.id})}">Detalhes</a>
-                        <a class="text-slate-900" th:href="@{/produtos/{id}/editar(id=${produto.id})}">Editar</a>
+                <tr th:each="produto : ${produtos}" class="border-t border-slate-100 text-base text-slate-700 md:text-lg">
+                    <td class="px-4 py-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100 text-base font-bold text-slate-500" th:text="${#strings.substring(produto.nome, 0, 1)}"></span>
+                            <span class="font-semibold text-slate-800" th:text="${produto.nome}"></span>
+                        </div>
                     </td>
+                    <td class="px-4 py-4">
+                        <span class="rounded-md bg-slate-100 px-3 py-1 text-base text-slate-600" th:text="${produto.categoria != null ? produto.categoria.nome : '-'}"></span>
+                    </td>
+                    <td class="px-4 py-4 font-medium" th:text="'R$ ' + ${#numbers.formatDecimal(produto.precoCompra, 1, 2)}"></td>
+                    <td class="px-4 py-4 font-bold text-slate-900" th:text="'R$ ' + ${#numbers.formatDecimal(produto.precoVenda, 1, 2)}"></td>
+                    <td class="px-4 py-4 font-bold text-emerald-600" th:text="${margensPorProduto[produto.id]}"></td>
+                    <td class="px-4 py-4">
+                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-base font-bold text-emerald-700" th:text="${produto.quantidadeEstoque}"></span>
+                    </td>
+                    <td class="px-4 py-4">
+                        <div class="flex items-center gap-3">
+                            <a class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-indigo-600" th:href="@{/produtos/{id}/editar(id=${produto.id})}" title="Editar">
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path d="M4 20l4.5-1 10-10a2 2 0 0 0-2.8-2.8l-10 10z" />
+                                </svg>
+                            </a>
+                            <a class="inline-flex rounded-lg px-3 py-2 text-base font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900" th:href="@{/produtos/{id}(id=${produto.id})}">Detalhes</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(produtos)}">
+                    <td colspan="7" class="px-4 py-8 text-center text-lg text-slate-500">Nenhum produto encontrado.</td>
                 </tr>
                 </tbody>
             </table>
         </div>
-    </section>
+    </div>
+</section>
 </html>

@@ -4,54 +4,288 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Ampliart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+        (function () {
+            const temaSalvo = localStorage.getItem('ampliart-theme');
+            const prefereEscuro = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (temaSalvo === 'dark' || (!temaSalvo && prefereEscuro)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     <link rel="stylesheet" th:href="@{/css/tailwind.css}" />
 </head>
-<body class="bg-gradient-to-br from-rose-50 via-amber-50 to-sky-50 text-slate-900">
-    <div class="min-h-screen flex">
-        <aside class="w-64 bg-white/80 backdrop-blur border-r border-rose-100 p-6">
-            <div class="text-2xl font-semibold text-rose-700 mb-8">Ampliart</div>
-            <nav class="space-y-3 text-slate-700">
-                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/dashboard}">Dashboard</a>
-                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/produtos}">Produtos</a>
-                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/categorias}">Categorias</a>
-                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/estoque/movimentacoes}">Estoque</a>
-                <a class="block rounded px-3 py-2 hover:bg-rose-100/70" th:href="@{/orcamentos}">Orcamentos</a>
-            </nav>
-        </aside>
-        <main class="flex-1 p-8">
+<body class="min-h-screen bg-gradient-to-br from-rose-200 via-orange-100 to-amber-100 p-0 text-slate-900 transition-colors dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100 md:p-2" style="font-family: 'Manrope', sans-serif;">
+<div class="mx-auto flex min-h-screen w-full max-w-none overflow-hidden bg-slate-100 transition-colors dark:bg-slate-900 md:min-h-[calc(100vh-1rem)] md:rounded-[22px] md:border md:border-slate-200/80 md:shadow-[0_18px_65px_rgba(2,6,23,0.62)] dark:md:border-slate-700 dark:md:shadow-[0_18px_65px_rgba(0,0,0,0.55)]">
+    <div id="sidebarBackdrop" class="fixed inset-0 z-30 hidden bg-slate-950/45 backdrop-blur-[1px] md:hidden"></div>
+
+    <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 flex w-[282px] max-w-[86vw] flex-col overflow-y-auto border-r border-slate-200 bg-white/95 backdrop-blur transition-transform duration-200 -translate-x-full dark:border-slate-700 dark:bg-slate-900/95 md:relative md:inset-auto md:z-auto md:w-[258px] md:max-w-none md:translate-x-0">
+        <div class="border-b border-slate-200 px-5 py-5 dark:border-slate-700 md:px-6 md:py-7">
+            <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
+                        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                            <path d="M12 3l3 6 6 .8-4.4 4.3 1.1 6.1L12 17.5 6.3 20.2l1.1-6.1L3 9.8 9 9z" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-extrabold leading-none text-indigo-600 dark:text-indigo-300">Ampliart</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Gestao Integrada</p>
+                    </div>
+                </div>
+                <button id="mobileMenuCloseButton" type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 md:hidden" aria-label="Fechar menu">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <nav class="flex-1 space-y-2 px-4 py-6">
+            <a class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80 md:text-lg" th:href="@{/dashboard}">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                </svg>
+                Dashboard
+            </a>
+            <a class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80 md:text-lg" th:href="@{/produtos}">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M4 7h16" stroke-linecap="round" />
+                    <rect x="5" y="4" width="14" height="16" rx="2" />
+                    <path d="M9 11h6" stroke-linecap="round" />
+                </svg>
+                Produtos
+            </a>
+            <a class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80 md:text-lg" th:href="@{/categorias}">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M4 7h16" stroke-linecap="round" />
+                    <path d="M4 12h16" stroke-linecap="round" />
+                    <path d="M4 17h16" stroke-linecap="round" />
+                </svg>
+                Categorias
+            </a>
+            <a class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80 md:text-lg" th:href="@{/estoque/movimentacoes}">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 3v4" stroke-linecap="round" />
+                    <path d="M8 7h8l1 13H7z" />
+                    <path d="M9 11h6" stroke-linecap="round" />
+                </svg>
+                Estoque
+            </a>
+            <a class="nav-link flex items-center gap-3 rounded-xl px-4 py-3 text-base font-semibold text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800/80 md:text-lg" th:href="@{/orcamentos}">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M8 3h8l4 4v14H4V3z" />
+                    <path d="M8 12h8" stroke-linecap="round" />
+                    <path d="M8 16h5" stroke-linecap="round" />
+                </svg>
+                Orcamentos
+            </a>
+        </nav>
+
+        <div class="px-4 pb-3">
+            <button id="themeToggle" type="button" class="flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                <span class="relative flex h-5 w-5 items-center justify-center">
+                    <svg id="themeIconSun" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="12" cy="12" r="4" />
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke-linecap="round" />
+                    </svg>
+                    <svg id="themeIconMoon" class="hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span id="themeToggleText">Tema escuro</span>
+            </button>
+        </div>
+
+        <div class="px-4 pb-4">
+            <a th:href="@{/orcamentos/novo}" class="group flex h-14 items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-500 px-5 text-base font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:brightness-105 dark:from-indigo-600 dark:via-indigo-500 dark:to-indigo-400 dark:shadow-black/30 md:text-lg">
+                <span class="flex h-6 w-6 items-center justify-center rounded-full border border-white/80">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path d="M12 5v14M5 12h14" stroke-linecap="round" />
+                    </svg>
+                </span>
+                Novo Orcamento
+            </a>
+        </div>
+    </aside>
+
+    <div class="flex min-w-0 flex-1 flex-col">
+        <header class="flex items-center justify-between border-b border-slate-200 bg-white/80 px-4 py-3 backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden">
+            <button id="mobileMenuButton" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800" aria-label="Abrir menu">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                    <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+                </svg>
+            </button>
+            <a th:href="@{/dashboard}" class="text-lg font-extrabold text-indigo-600 dark:text-indigo-300">Ampliart</a>
+            <a th:href="@{/orcamentos/novo}" class="inline-flex h-9 items-center rounded-lg bg-indigo-600 px-3 text-xs font-semibold text-white">Novo</a>
+        </header>
+
+        <main class="min-w-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-10">
             <div th:replace="~{fragmentos/mensagens :: mensagens}"></div>
             <div th:replace="${conteudo}"></div>
         </main>
     </div>
-    <script>
-        function aplicarMascaraTelefone(valor) {
-            const numeros = valor.replace(/\\D/g, '');
-            if (numeros.length <= 10) {
-                return numeros.replace(/(\\d{2})(\\d{4})(\\d{0,4})/, '($1) $2-$3').trim();
-            }
-            return numeros.replace(/(\\d{2})(\\d{5})(\\d{0,4})/, '($1) $2-$3').trim();
+</div>
+
+<script>
+    function aplicarMascaraTelefone(valor) {
+        const numeros = valor.replace(/\D/g, '').slice(0, 11);
+
+        if (numeros.length <= 2) {
+            return numeros;
         }
 
-        function aplicarMascaraMoeda(valor) {
-            const numero = Number(valor.replace(',', '.'));
-            if (Number.isNaN(numero)) {
-                return valor;
-            }
-            return numero.toFixed(2);
+        if (numeros.length <= 6) {
+            return `(${numeros.slice(0, 2)}) ${numeros.slice(2)}`;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.js-telefone').forEach((el) => {
-                el.addEventListener('input', (e) => {
-                    e.target.value = aplicarMascaraTelefone(e.target.value);
-                });
-            });
-            document.querySelectorAll('.js-moeda').forEach((el) => {
-                el.addEventListener('blur', (e) => {
-                    e.target.value = aplicarMascaraMoeda(e.target.value);
-                });
+        if (numeros.length <= 10) {
+            return `(${numeros.slice(0, 2)}) ${numeros.slice(2, 6)}-${numeros.slice(6)}`;
+        }
+
+        return `(${numeros.slice(0, 2)}) ${numeros.slice(2, 7)}-${numeros.slice(7)}`;
+    }
+
+    function aplicarMascaraMoeda(valor) {
+        const numero = Number(String(valor).replace(',', '.'));
+        if (Number.isNaN(numero)) {
+            return valor;
+        }
+        return numero.toFixed(2);
+    }
+
+    function aplicarNavAtiva() {
+        const caminhoAtual = window.location.pathname;
+        const classesAtivo = ['bg-indigo-100', 'text-indigo-600', 'shadow-sm', 'dark:bg-indigo-500/20', 'dark:text-indigo-200'];
+        const classesInativo = ['text-slate-600', 'dark:text-slate-300'];
+
+        document.querySelectorAll('.nav-link').forEach((link) => {
+            const href = link.getAttribute('href');
+            if (!href) {
+                return;
+            }
+            const ativo = href === '/dashboard'
+                ? caminhoAtual === '/' || caminhoAtual.startsWith('/dashboard')
+                : caminhoAtual.startsWith(href);
+
+            link.classList.remove(...classesAtivo);
+            link.classList.add(...classesInativo);
+
+            if (ativo) {
+                link.classList.add(...classesAtivo);
+                link.classList.remove(...classesInativo);
+            }
+        });
+    }
+
+    function atualizarTextoTema() {
+        const botao = document.getElementById('themeToggle');
+        const texto = document.getElementById('themeToggleText');
+        const iconeSol = document.getElementById('themeIconSun');
+        const iconeLua = document.getElementById('themeIconMoon');
+        if (!botao || !texto || !iconeSol || !iconeLua) {
+            return;
+        }
+
+        const escuroAtivo = document.documentElement.classList.contains('dark');
+        texto.textContent = escuroAtivo ? 'Tema claro' : 'Tema escuro';
+        iconeSol.classList.toggle('hidden', escuroAtivo);
+        iconeLua.classList.toggle('hidden', !escuroAtivo);
+        botao.setAttribute('aria-label', escuroAtivo ? 'Ativar tema claro' : 'Ativar tema escuro');
+    }
+
+    function alternarTema() {
+        const ativouEscuro = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('ampliart-theme', ativouEscuro ? 'dark' : 'light');
+        atualizarTextoTema();
+    }
+
+    function configurarMenuMobile() {
+        const sidebar = document.getElementById('appSidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        const botaoAbrir = document.getElementById('mobileMenuButton');
+        const botaoFechar = document.getElementById('mobileMenuCloseButton');
+
+        if (!sidebar || !backdrop) {
+            return;
+        }
+
+        const abrir = () => {
+            sidebar.classList.remove('-translate-x-full');
+            sidebar.classList.add('translate-x-0');
+            backdrop.classList.remove('hidden');
+            document.body.classList.add('overflow-hidden');
+        };
+
+        const fechar = () => {
+            sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('translate-x-0');
+            backdrop.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+        const ajustarEstadoPorLargura = () => {
+            const desktop = window.matchMedia('(min-width: 768px)').matches;
+            if (desktop) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                backdrop.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+                return;
+            }
+            fechar();
+        };
+
+        botaoAbrir?.addEventListener('click', abrir);
+        botaoFechar?.addEventListener('click', fechar);
+        backdrop.addEventListener('click', fechar);
+
+        sidebar.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    fechar();
+                }
             });
         });
-    </script>
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && window.innerWidth < 768) {
+                fechar();
+            }
+        });
+
+        window.addEventListener('resize', ajustarEstadoPorLargura);
+        ajustarEstadoPorLargura();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.js-telefone').forEach((el) => {
+            el.addEventListener('input', (e) => {
+                e.target.value = aplicarMascaraTelefone(e.target.value);
+            });
+        });
+
+        document.querySelectorAll('.js-moeda').forEach((el) => {
+            el.addEventListener('blur', (e) => {
+                e.target.value = aplicarMascaraMoeda(e.target.value);
+            });
+        });
+
+        const botaoTema = document.getElementById('themeToggle');
+        if (botaoTema) {
+            botaoTema.addEventListener('click', alternarTema);
+        }
+
+        atualizarTextoTema();
+        aplicarNavAtiva();
+        configurarMenuMobile();
+    });
+</script>
 </body>
 </html>

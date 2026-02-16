@@ -12,6 +12,9 @@ import java.util.List;
 public interface OrcamentoRepositorio extends JpaRepository<Orcamento, Long> {
     List<Orcamento> findByStatus(StatusOrcamento status);
 
+    @Query("select o from Orcamento o where o.status = :status and o.dataConclusao is not null")
+    List<Orcamento> buscarConcluidos(@Param("status") StatusOrcamento status);
+
     @Query("select o from Orcamento o where o.status = :status and o.dataConclusao between :inicio and :fim")
     List<Orcamento> buscarConcluidosPeriodo(@Param("status") StatusOrcamento status,
                                             @Param("inicio") LocalDateTime inicio,

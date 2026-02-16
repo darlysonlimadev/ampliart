@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
+<section class="space-y-6">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100 md:text-5xl">Analytics de Vendas</h1>
+            <p class="mt-2 text-base text-slate-500 dark:text-slate-400">
+                Intervalo analisado:
+                <strong class="text-slate-700 dark:text-slate-100" th:text="${#temporals.format(analise.dataInicio, 'dd/MM/yyyy') + ' ate ' + #temporals.format(analise.dataFim, 'dd/MM/yyyy')}"></strong>
+            </p>
+            <span th:if="${analise.periodoPersonalizado}" class="mt-2 inline-flex rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-orange-700 dark:bg-orange-500/20 dark:text-orange-200">Intervalo personalizado</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+            <a class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+               th:href="@{/dashboard/vendas/exportar/csv(periodo=${analise.periodoSelecionado},referencia=${analise.referencia},dataInicio=${analise.periodoPersonalizado ? analise.dataInicio : null},dataFim=${analise.periodoPersonalizado ? analise.dataFim : null})}">
+                Exportar CSV
+            </a>
+            <a class="inline-flex h-11 items-center justify-center rounded-xl bg-slate-800 px-4 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+               th:href="@{/dashboard/vendas/exportar/pdf(periodo=${analise.periodoSelecionado},referencia=${analise.referencia},dataInicio=${analise.periodoPersonalizado ? analise.dataInicio : null},dataFim=${analise.periodoPersonalizado ? analise.dataFim : null})}">
+                Exportar PDF
+            </a>
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+        <form class="grid grid-cols-1 gap-3 xl:grid-cols-[150px_190px_190px_190px_auto_auto]" method="get" th:action="@{/dashboard/vendas}">
+            <select class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" name="periodo">
+                <option value="dia" th:selected="${analise.periodoSelecionado == 'dia'}">Dia</option>
+                <option value="semana" th:selected="${analise.periodoSelecionado == 'semana'}">Semana</option>
+                <option value="mes" th:selected="${analise.periodoSelecionado == 'mes'}">Mes</option>
+                <option value="ano" th:selected="${analise.periodoSelecionado == 'ano'}">Ano</option>
+            </select>
+            <input class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" type="date" name="referencia" th:value="${analise.referencia}" />
+            <input class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" type="date" name="dataInicio" th:value="${analise.periodoPersonalizado ? analise.dataInicio : null}" />
+            <input class="h-11 rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-700 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-100" type="date" name="dataFim" th:value="${analise.periodoPersonalizado ? analise.dataFim : null}" />
+            <button class="h-11 rounded-xl bg-slate-800 px-4 text-sm font-semibold text-white transition hover:bg-slate-700 dark:bg-indigo-600 dark:hover:bg-indigo-500" type="submit">Atualizar analise</button>
+            <a class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+               th:href="@{/dashboard/vendas(periodo=${analise.periodoSelecionado},referencia=${analise.referencia})}">
+                Limpar intervalo
+            </a>
+        </form>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <p class="text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400">Receita</p>
+            <p class="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100" th:text="'R$ ' + ${#numbers.formatDecimal(analise.receitaTotal, 1, 2)}"></p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <p class="text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400">Gasto</p>
+            <p class="mt-2 text-2xl font-extrabold text-rose-600" th:text="'R$ ' + ${#numbers.formatDecimal(analise.gastoTotal, 1, 2)}"></p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <p class="text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400">Lucro</p>
+            <p class="mt-2 text-2xl font-extrabold text-emerald-600" th:text="'R$ ' + ${#numbers.formatDecimal(analise.lucroTotal, 1, 2)}"></p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <p class="text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400">Vendas Concluidas</p>
+            <p class="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100" th:text="${analise.vendasConcluidas}"></p>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <p class="text-sm uppercase tracking-wide text-slate-500 dark:text-slate-400">Ticket / Margem</p>
+            <p class="mt-2 text-xl font-extrabold text-slate-800 dark:text-slate-100" th:text="'R$ ' + ${#numbers.formatDecimal(analise.ticketMedio, 1, 2)}"></p>
+            <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-300" th:text="${#numbers.formatDecimal(analise.margemLucro, 1, 2)} + '%' + ' de margem'"></p>
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+        <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Receita x Gasto x Lucro</h2>
+            <span class="text-xs uppercase tracking-wide text-slate-400 dark:text-slate-500">Periodo selecionado</span>
+        </div>
+        <canvas id="graficoPeriodo" height="120"></canvas>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <div class="border-b border-slate-100 px-5 py-4 dark:border-slate-700">
+                <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Produtos Mais Vendidos</h2>
+            </div>
+            <div class="max-h-[380px] overflow-auto">
+                <table class="min-w-full">
+                    <thead class="sticky top-0 bg-slate-50 dark:bg-slate-800">
+                    <tr class="text-left text-xs font-bold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                        <th class="px-4 py-3">Produto</th>
+                        <th class="px-4 py-3">Qtd</th>
+                        <th class="px-4 py-3">Receita</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="produto, stat : ${analise.produtosMaisVendidos}" class="border-t border-slate-100 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-200">
+                        <td class="px-4 py-3">
+                            <span class="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-500 dark:bg-slate-700 dark:text-slate-200" th:text="${stat.index + 1}"></span>
+                            <span th:text="${produto.nome}"></span>
+                        </td>
+                        <td class="px-4 py-3 font-semibold" th:text="${produto.quantidadeVendida}"></td>
+                        <td class="px-4 py-3 font-semibold" th:text="'R$ ' + ${#numbers.formatDecimal(produto.receita, 1, 2)}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(analise.produtosMaisVendidos)}">
+                        <td colspan="3" class="px-4 py-8 text-center text-slate-500 dark:text-slate-400">Sem vendas concluidas neste periodo.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <h2 class="mb-4 text-xl font-bold text-slate-800 dark:text-slate-100">Melhores Meses de Venda</h2>
+            <canvas id="graficoMeses" height="120"></canvas>
+            <div class="mt-4 max-h-[180px] overflow-auto rounded-xl border border-slate-100 dark:border-slate-700">
+                <table class="min-w-full">
+                    <tbody>
+                    <tr th:each="mes, stat : ${analise.melhoresMeses}" class="border-t border-slate-100 text-sm text-slate-700 dark:border-slate-700 dark:text-slate-200">
+                        <td class="px-3 py-2 font-semibold" th:text="${(stat.index + 1) + '. ' + mes.mes}"></td>
+                        <td class="px-3 py-2 text-right font-bold" th:text="'R$ ' + ${#numbers.formatDecimal(mes.receita, 1, 2)}"></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(analise.melhoresMeses)}">
+                        <td class="px-3 py-6 text-center text-slate-500 dark:text-slate-400">Sem historico suficiente de vendas.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        const temaEscuroAtivo = document.documentElement.classList.contains('dark');
+        const corGrade = temaEscuroAtivo ? 'rgba(148, 163, 184, 0.18)' : 'rgba(148, 163, 184, 0.25)';
+        const corTexto = temaEscuroAtivo ? '#cbd5e1' : '#475569';
+        const corLegenda = temaEscuroAtivo ? '#e2e8f0' : '#334155';
+
+        const rotulosPeriodo = [[${analise.serieGrafico.rotulos}]];
+        const receitasPeriodo = [[${analise.serieGrafico.receitas}]];
+        const gastosPeriodo = [[${analise.serieGrafico.gastos}]];
+        const lucrosPeriodo = [[${analise.serieGrafico.lucros}]];
+
+        const graficoPeriodo = document.getElementById('graficoPeriodo');
+        if (graficoPeriodo) {
+            new Chart(graficoPeriodo, {
+                type: 'line',
+                data: {
+                    labels: rotulosPeriodo,
+                    datasets: [
+                        {
+                            label: 'Receita',
+                            data: receitasPeriodo,
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.12)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Gasto',
+                            data: gastosPeriodo,
+                            borderColor: '#e11d48',
+                            backgroundColor: temaEscuroAtivo ? 'rgba(225, 29, 72, 0.18)' : 'rgba(225, 29, 72, 0.08)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Lucro',
+                            data: lucrosPeriodo,
+                            borderColor: '#059669',
+                            backgroundColor: 'rgba(5, 150, 105, 0.10)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: corLegenda
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: corTexto
+                            },
+                            grid: {
+                                color: corGrade
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: corTexto
+                            },
+                            grid: {
+                                color: corGrade
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const rotulosMeses = [[${melhoresMesesRotulos}]];
+        const receitasMeses = [[${melhoresMesesReceitas}]];
+
+        const graficoMeses = document.getElementById('graficoMeses');
+        if (graficoMeses) {
+            new Chart(graficoMeses, {
+                type: 'bar',
+                data: {
+                    labels: rotulosMeses,
+                    datasets: [
+                        {
+                            label: 'Receita',
+                            data: receitasMeses,
+                            backgroundColor: temaEscuroAtivo ? '#818cf8' : '#6366f1',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: corTexto
+                            },
+                            grid: {
+                                color: corGrade
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: corTexto
+                            },
+                            grid: {
+                                color: corGrade
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</section>
+</html>

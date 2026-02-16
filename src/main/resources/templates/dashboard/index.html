@@ -1,99 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{fragmentos/layout :: layout(~{::section})}">
-    <section>
-        <h1 class="text-2xl font-semibold mb-6">Dashboard</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white shadow rounded p-4">
-                <div class="text-sm text-slate-500">Hoje</div>
-                <div class="text-lg font-semibold" th:text="${indicadorHoje.receita}"></div>
-                <div class="text-sm">Gasto: <span th:text="${indicadorHoje.gasto}"></span></div>
-                <div class="text-sm">Lucro: <span th:text="${indicadorHoje.lucro}"></span></div>
+<section class="space-y-6">
+    <div class="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <div class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition-colors dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20">
+            <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-300">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M8 5h8" stroke-linecap="round" />
+                    <path d="M7 3h10v18H7z" />
+                    <path d="M10 11h4M10 15h4" stroke-linecap="round" />
+                </svg>
             </div>
-            <div class="bg-white shadow rounded p-4">
-                <div class="text-sm text-slate-500">Semana</div>
-                <div class="text-lg font-semibold" th:text="${indicadorSemana.receita}"></div>
-                <div class="text-sm">Gasto: <span th:text="${indicadorSemana.gasto}"></span></div>
-                <div class="text-sm">Lucro: <span th:text="${indicadorSemana.lucro}"></span></div>
-            </div>
-            <div class="bg-white shadow rounded p-4">
-                <div class="text-sm text-slate-500">Mes</div>
-                <div class="text-lg font-semibold" th:text="${indicadorMes.receita}"></div>
-                <div class="text-sm">Gasto: <span th:text="${indicadorMes.gasto}"></span></div>
-                <div class="text-sm">Lucro: <span th:text="${indicadorMes.lucro}"></span></div>
-            </div>
-            <div class="bg-white shadow rounded p-4">
-                <div class="text-sm text-slate-500">Ano</div>
-                <div class="text-lg font-semibold" th:text="${indicadorAno.receita}"></div>
-                <div class="text-sm">Gasto: <span th:text="${indicadorAno.gasto}"></span></div>
-                <div class="text-sm">Lucro: <span th:text="${indicadorAno.lucro}"></span></div>
+            <div>
+                <p class="text-sm text-slate-500 dark:text-slate-400 md:text-lg">Valor em Estoque</p>
+                <p class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 md:text-4xl" th:text="'R$ ' + ${#numbers.formatDecimal(valorEmEstoque, 1, 2)}"></p>
             </div>
         </div>
 
-        <div class="bg-white shadow rounded mb-6">
-            <div class="p-4 border-b font-semibold">Ultimos 7 dias</div>
-            <div class="p-4">
-                <canvas id="graficoReceita" height="120"></canvas>
+        <a th:href="@{/dashboard/vendas}" class="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20 dark:hover:border-emerald-500/40 dark:hover:bg-slate-900">
+            <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-300">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <rect x="3" y="7" width="18" height="10" rx="2" />
+                    <path d="M7 12h4" stroke-linecap="round" />
+                </svg>
             </div>
-            <table class="min-w-full">
-                <thead>
-                <tr class="text-left border-b">
-                    <th class="p-3">Periodo</th>
-                    <th class="p-3">Receita</th>
-                    <th class="p-3">Gasto</th>
-                    <th class="p-3">Lucro</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="linha : ${ultimosDias}" class="border-b">
-                    <td class="p-3" th:text="${linha.periodo}"></td>
-                    <td class="p-3" th:text="${linha.receita}"></td>
-                    <td class="p-3" th:text="${linha.gasto}"></td>
-                    <td class="p-3" th:text="${linha.lucro}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+            <div>
+                <p class="text-sm text-slate-500 dark:text-slate-400 md:text-lg">Vendas Concluidas</p>
+                <p class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 md:text-4xl" th:text="'R$ ' + ${#numbers.formatDecimal(indicadorMes.receita, 1, 2)}"></p>
+                <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-300">Abrir analytics</p>
+            </div>
+        </a>
 
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script th:inline="javascript">
-            const labels = [[${labelsGrafico}]];
-            const receitas = [[${receitasGrafico}]];
-            const lucros = [[${lucrosGrafico}]];
-            const ctx = document.getElementById('graficoReceita');
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: 'Receita',
-                                data: receitas,
-                                borderColor: '#0f172a',
-                                backgroundColor: 'rgba(15, 23, 42, 0.1)',
-                                tension: 0.3
-                            },
-                            {
-                                label: 'Lucro',
-                                data: lucros,
-                                borderColor: '#16a34a',
-                                backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                                tension: 0.3
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'bottom' }
-                        },
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            }
-        </script>
-    </section>
+        <a th:href="@{/dashboard/estoque-baixo}" class="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/90 dark:shadow-black/20 dark:hover:border-rose-500/40 dark:hover:bg-slate-900">
+            <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path d="M12 4l8 14H4z" />
+                    <path d="M12 9v4" stroke-linecap="round" />
+                    <circle cx="12" cy="16" r="1" fill="currentColor" stroke="none" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-sm text-slate-500 dark:text-slate-400 md:text-lg">Estoque Baixo</p>
+                <p class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 md:text-4xl" th:text="${estoqueBaixo} + ' Itens'"></p>
+                <p class="text-xs font-semibold uppercase tracking-wide text-rose-500 dark:text-rose-300">Ver produtos</p>
+            </div>
+        </a>
+    </div>
+
+    <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-500 px-8 py-10 text-white shadow-xl shadow-indigo-900/20 ring-1 ring-white/20 dark:from-indigo-600 dark:via-violet-600 dark:to-sky-600 dark:shadow-black/35 dark:ring-indigo-200/20">
+        <div class="absolute -right-8 -bottom-8 h-44 w-44 rounded-full bg-white/10"></div>
+        <div class="absolute right-28 top-8 h-16 w-16 rounded-full bg-white/10"></div>
+        <div class="relative max-w-2xl">
+            <h1 class="text-3xl font-extrabold leading-tight md:text-5xl">Bem-vindo a Ampliart</h1>
+            <p class="mt-4 text-base text-indigo-100 dark:text-indigo-50 md:text-2xl">Sistema de gestao completo. Gerencie estoque, crie orcamentos e acompanhe vendas em tempo real.</p>
+            <a th:href="@{/orcamentos/novo}" class="mt-8 inline-flex h-12 items-center rounded-2xl bg-white px-6 text-base font-bold text-indigo-700 shadow-lg shadow-indigo-950/10 transition hover:brightness-95 dark:bg-slate-950/75 dark:text-indigo-100 dark:ring-1 dark:ring-indigo-200/25 md:h-14 md:px-8 md:text-2xl">Criar Novo Orcamento</a>
+        </div>
+    </div>
+</section>
 </html>

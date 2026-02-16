@@ -21,6 +21,7 @@ public class Orcamento {
     private String clienteNome;
 
     @NotBlank
+    @Size(max = 15, message = "Telefone deve ter no maximo 15 caracteres")
     @Column(name = "cliente_telefone", nullable = false)
     private String clienteTelefone;
 
